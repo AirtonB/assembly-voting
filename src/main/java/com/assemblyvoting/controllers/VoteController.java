@@ -1,6 +1,5 @@
 package com.assemblyvoting.controllers;
 
-
 import com.assemblyvoting.domain.Vote;
 import com.assemblyvoting.services.VoteService;
 import org.springframework.http.HttpStatus;
@@ -14,22 +13,25 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = "/vote", produces = "application/json")
 public class VoteController {
-    final VoteService voteService;
-    public VoteController(VoteService voteService) {
-        this.voteService = voteService;
-    }
-    @GetMapping("/{id}")
-    public ResponseEntity<Vote> getVote(@PathVariable Long id) {
-        Optional<Vote> vote = voteService.getVote(id);
+  final VoteService voteService;
 
-        return vote.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+  public VoteController(VoteService voteService) {
+    this.voteService = voteService;
+  }
 
-    @PostMapping
-    public ResponseEntity<Vote> createVote(@RequestBody Vote vote) {
-        Optional<Vote> _vote = voteService.saveVote(vote);
+  @GetMapping("/{id}")
+  public ResponseEntity<Vote> getVote(@PathVariable Long id) {
+    Optional<Vote> vote = voteService.getVote(id);
 
-        return _vote.map(it -> new ResponseEntity<>(it, HttpStatus.CREATED))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
-    }
+    return vote.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+  }
+
+  @PostMapping
+  public ResponseEntity<Vote> createVote(@RequestBody Vote vote) {
+    Optional<Vote> _vote = voteService.saveVote(vote);
+
+    return _vote
+        .map(it -> new ResponseEntity<>(it, HttpStatus.CREATED))
+        .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+  }
 }

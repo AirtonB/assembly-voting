@@ -12,18 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Vote {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private Boolean registeredVote;
+  private Boolean registeredVote;
 
-    @OneToOne
-    private Schedule schedule;
+  @OneToOne private Schedule schedule;
 
-    private String client;
+  private String client;
 }
-
-
-
-

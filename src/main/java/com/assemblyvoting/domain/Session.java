@@ -14,15 +14,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Session {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @OneToOne
-    private Schedule schedule;
+  @OneToOne private Schedule schedule;
 
-    private LocalDateTime startSession;
-    private LocalDateTime endSession;
+  private LocalDateTime startSession;
+  private LocalDateTime endSession;
 
-    private Long expirationTimeInMinutes;
+  private Long expirationTimeInMinutes;
 }

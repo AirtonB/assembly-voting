@@ -5,4 +5,4 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * @author leandro-bezerra
  */
-public interface SessionRepository extends CrudRepository<Session, Long> { }
+public interface SessionRepository extends CrudRepository<Session, Long> {}

@@ -17,17 +17,18 @@ import java.util.Optional;
 @RequestMapping(value = "/session", produces = "application/json")
 public class SessionController {
 
-    final SessionService sessionService;
+  final SessionService sessionService;
 
-    public SessionController(SessionService sessionService) {
-        this.sessionService = sessionService;
-    }
+  public SessionController(SessionService sessionService) {
+    this.sessionService = sessionService;
+  }
 
-    @PostMapping
-    public ResponseEntity<Session> createSession(@RequestBody Session session) {
-        Optional<Session> _session = sessionService.saveSession(session);
+  @PostMapping
+  public ResponseEntity<Session> createSession(@RequestBody Session session) {
+    Optional<Session> _session = sessionService.saveSession(session);
 
-        return _session.map(it -> new ResponseEntity<>(it, HttpStatus.CREATED))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
-    }
+    return _session
+        .map(it -> new ResponseEntity<>(it, HttpStatus.CREATED))
+        .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+  }
 }

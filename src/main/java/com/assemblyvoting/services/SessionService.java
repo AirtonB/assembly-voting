@@ -11,19 +11,19 @@ import java.util.Optional;
 @Service
 public class SessionService {
 
-    final SessionRepository sessionRepository;
+  final SessionRepository sessionRepository;
 
-    public SessionService(SessionRepository sessionRepository) {
-        this.sessionRepository = sessionRepository;
+  public SessionService(SessionRepository sessionRepository) {
+    this.sessionRepository = sessionRepository;
+  }
+
+  public Optional<Session> saveSession(Session session) {
+    try {
+      sessionRepository.save(session);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
 
-    public Optional<Session> saveSession(Session session) {
-        try{
-            sessionRepository.save(session);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        return Optional.of(session);
-    }
+    return Optional.of(session);
+  }
 }

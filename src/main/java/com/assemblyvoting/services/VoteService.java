@@ -10,22 +10,22 @@ import java.util.Optional;
  */
 @Service
 public class VoteService {
-    final VoteRepository voteRepository;
+  final VoteRepository voteRepository;
 
-    public VoteService(VoteRepository voteRepository) {
-        this.voteRepository = voteRepository;
-    }
+  public VoteService(VoteRepository voteRepository) {
+    this.voteRepository = voteRepository;
+  }
 
-    public Optional<Vote> getVote(Long id) {
-        return voteRepository.findById(id);
-    }
+  public Optional<Vote> getVote(Long id) {
+    return voteRepository.findById(id);
+  }
 
-    public Optional<Vote> saveVote(Vote vote) {
-        try{
-            voteRepository.save(vote);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Optional.of(vote);
+  public Optional<Vote> saveVote(Vote vote) {
+    try {
+      voteRepository.save(vote);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    return Optional.of(vote);
+  }
 }

@@ -11,26 +11,26 @@ import java.util.Optional;
  */
 @Service
 public class ScheduleService {
-    final ScheduleRepository scheduleRepository;
+  final ScheduleRepository scheduleRepository;
 
-    public ScheduleService(ScheduleRepository scheduleRepository) {
-        this.scheduleRepository = scheduleRepository;
-    }
-    public List<Schedule> getAllSchedules() {
-        return scheduleRepository.findAll();
-    }
+  public ScheduleService(ScheduleRepository scheduleRepository) {
+    this.scheduleRepository = scheduleRepository;
+  }
 
-    public Optional<Schedule> getSchedule(Long id) {
-        return scheduleRepository.findById(id);
-    }
+  public List<Schedule> getAllSchedules() {
+    return scheduleRepository.findAll();
+  }
 
-    public Optional<Schedule> saveSchedule(Schedule schedule) {
-        try{
-            scheduleRepository.save(schedule);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Optional.of(schedule);
-    }
+  public Optional<Schedule> getSchedule(Long id) {
+    return scheduleRepository.findById(id);
+  }
 
+  public Optional<Schedule> saveSchedule(Schedule schedule) {
+    try {
+      scheduleRepository.save(schedule);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return Optional.of(schedule);
+  }
 }

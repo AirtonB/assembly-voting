@@ -10,5 +10,5 @@ import java.util.List;
  */
 @Repository
 public interface ScheduleRepository extends CrudRepository<Schedule, Long> {
-    List<Schedule> findAll();
+  List<Schedule> findAll();
 }
