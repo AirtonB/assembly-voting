@@ -1,6 +1,7 @@
 package com.assemblyvoting.controllers;
 
 import com.assemblyvoting.domain.Vote;
+import com.assemblyvoting.models.responses.UserResponseStatus;
 import com.assemblyvoting.services.VoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +22,19 @@ public class VoteController {
 
   @GetMapping("/{id}")
   public ResponseEntity<Vote> getVote(@PathVariable Long id) {
-    Optional<Vote> vote = voteService.getVote(id);
-
+    Optional<Vote> vote = voteService.findVoteById(id);
     return vote.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
   @PostMapping
-  public ResponseEntity<Vote> createVote(@RequestBody Vote vote) {
+  public ResponseEntity<UserResponseStatus> saveVote(@RequestBody Vote vote) {
     Optional<Vote> _vote = voteService.saveVote(vote);
 
     return _vote
-        .map(it -> new ResponseEntity<>(it, HttpStatus.CREATED))
-        .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        .map(it -> new ResponseEntity<>(UserResponseStatus.ABLE_TO_VOTE, HttpStatus.CREATED))
+        .orElseGet(
+            () ->
+                new ResponseEntity<>(
+                    UserResponseStatus.UNABLE_TO_VOTE, HttpStatus.INTERNAL_SERVER_ERROR));
   }
 }

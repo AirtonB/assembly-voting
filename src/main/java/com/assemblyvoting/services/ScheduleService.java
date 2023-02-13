@@ -1,36 +1,33 @@
 package com.assemblyvoting.services;
 
 import com.assemblyvoting.domain.Schedule;
+import com.assemblyvoting.models.converters.ScheduleConverter;
+import com.assemblyvoting.models.requests.ScheduleRequest;
 import com.assemblyvoting.repositories.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 /**
  * @author leandro-bezerra
  */
 @Service
 public class ScheduleService {
-  final ScheduleRepository scheduleRepository;
+  private final ScheduleRepository scheduleRepository;
+  private final ScheduleConverter scheduleConverter;
 
-  public ScheduleService(ScheduleRepository scheduleRepository) {
+  public ScheduleService(
+      ScheduleRepository scheduleRepository, ScheduleConverter scheduleConverter) {
     this.scheduleRepository = scheduleRepository;
-  }
-
-  public List<Schedule> getAllSchedules() {
-    return scheduleRepository.findAll();
+    this.scheduleConverter = scheduleConverter;
   }
 
   public Optional<Schedule> getSchedule(Long id) {
     return scheduleRepository.findById(id);
   }
 
-  public Optional<Schedule> saveSchedule(Schedule schedule) {
-    try {
-      scheduleRepository.save(schedule);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return Optional.of(schedule);
+  public Optional<Schedule> createSchedule(ScheduleRequest scheduleRequest) {
+
+    Schedule schedule = scheduleConverter.fromRequestToDomain(scheduleRequest);
+    return Optional.of(scheduleRepository.save(schedule));
   }
 }

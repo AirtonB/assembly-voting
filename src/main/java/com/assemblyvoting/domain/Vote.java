@@ -20,5 +20,5 @@ public class Vote {
 
   @OneToOne private Schedule schedule;
 
-  private String client;
+  private String userIdentification;
 }

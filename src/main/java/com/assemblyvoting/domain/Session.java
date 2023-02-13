@@ -18,10 +18,10 @@ public class Session {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne private Schedule schedule;
+  @OneToOne
+  @JoinColumn(name = "schedule_id")
+  private Schedule schedule;
 
-  private LocalDateTime startSession;
+  private LocalDateTime startSession = LocalDateTime.now();
   private LocalDateTime endSession;
-
-  private Long expirationTimeInMinutes;
 }
