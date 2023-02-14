@@ -3,6 +3,7 @@ package com.assemblyvoting.services;
 import com.assemblyvoting.domain.Schedule;
 import com.assemblyvoting.domain.Vote;
 import com.assemblyvoting.models.converters.VoteConverter;
+import com.assemblyvoting.models.responses.CPFResponse;
 import com.assemblyvoting.models.responses.VoteReponse;
 import com.assemblyvoting.repositories.VoteRepository;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 /**
  * @author leandro-bezerra
@@ -21,16 +21,19 @@ public class VoteService {
   private final SessionService sessionService;
   private final VoteConverter voteConverter;
   private final ScheduleService scheduleService;
+  private final CPFValidatorService cpfValidatorService;
 
   public VoteService(
       VoteRepository voteRepository,
       SessionService sessionService,
       VoteConverter voteConverter,
-      ScheduleService scheduleService) {
+      ScheduleService scheduleService,
+      CPFValidatorService cpfValidatorService) {
     this.voteRepository = voteRepository;
     this.sessionService = sessionService;
     this.voteConverter = voteConverter;
     this.scheduleService = scheduleService;
+    this.cpfValidatorService = cpfValidatorService;
   }
 
   public Optional<VoteReponse> findResultByScheduleId(Long id) {
@@ -51,15 +54,15 @@ public class VoteService {
 
   public Optional<Vote> saveVote(Vote vote) {
     final boolean isSessionOpened = sessionService.isSessionOpened(vote.getSchedule().getId());
-    final boolean isIdentificationValid =
-        Pattern.matches("^\\d{3}\\d{3}\\d{3}\\d{2}$", vote.getUserIdentification());
+
+    CPFResponse cpfResponse = cpfValidatorService.checkCpf(vote.getUserIdentification());
 
     if (isSessionOpened) {
 
       final boolean isUserAbleToVote =
           voteRepository.existsByUserIdentification(vote.getUserIdentification());
 
-      if (isIdentificationValid && isUserAbleToVote) {
+      if (cpfResponse.isValid() && isUserAbleToVote) {
         return Optional.of(voteRepository.save(vote));
       }
     }
