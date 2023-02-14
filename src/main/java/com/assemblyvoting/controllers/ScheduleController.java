@@ -5,9 +5,9 @@ import com.assemblyvoting.models.requests.ScheduleRequest;
 import com.assemblyvoting.services.ScheduleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -15,7 +15,7 @@ import java.util.Optional;
  * @author leandro-bezerra
  */
 @RestController()
-@RequestMapping(value = "/schedule", produces = "application/json")
+@RequestMapping(value = "/v1", produces = "application/json")
 public class ScheduleController {
 
   private final ScheduleService scheduleService;
@@ -24,7 +24,7 @@ public class ScheduleController {
     this.scheduleService = scheduleService;
   }
 
-  @PostMapping
+  @RequestMapping(value = "/schedule", method = RequestMethod.POST)
   public ResponseEntity<Schedule> createSchedule(@RequestBody ScheduleRequest scheduleRequest) {
 
     Optional<Schedule> _schedule = scheduleService.createSchedule(scheduleRequest);
