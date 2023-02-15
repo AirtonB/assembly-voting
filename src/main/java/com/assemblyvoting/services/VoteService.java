@@ -54,15 +54,14 @@ public class VoteService {
 
   public Optional<Vote> saveVote(Vote vote) {
     final boolean isSessionOpened = sessionService.isSessionOpened(vote.getSchedule().getId());
-
-    CPFResponse cpfResponse = cpfValidatorService.checkCpf(vote.getUserIdentification());
+    final CPFResponse cpfResponse = cpfValidatorService.checkCpf(vote.getUserIdentification());
 
     if (isSessionOpened) {
 
       final boolean isUserAbleToVote =
           voteRepository.existsByUserIdentification(vote.getUserIdentification());
 
-      if (cpfResponse.isValid() && isUserAbleToVote) {
+      if (cpfResponse.isValid() && !isUserAbleToVote) {
         return Optional.of(voteRepository.save(vote));
       }
     }
