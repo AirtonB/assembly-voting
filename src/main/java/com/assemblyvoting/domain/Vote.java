@@ -1,6 +1,8 @@
 package com.assemblyvoting.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,9 +18,13 @@ public class Vote {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @NotNull(message = "Seu voto não pode ser nulo!")
   private Boolean registeredVote;
 
-  @OneToOne private Schedule schedule;
+  @OneToOne
+  @NotNull(message = "A pauta de votação não pode ser nula!")
+  private Schedule schedule;
 
+  @NotBlank(message = "Utilize seu CPF. Campo nulo ou inválido!")
   private String userIdentification;
 }

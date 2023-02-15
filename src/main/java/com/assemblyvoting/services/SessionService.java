@@ -2,6 +2,8 @@ package com.assemblyvoting.services;
 
 import com.assemblyvoting.domain.Schedule;
 import com.assemblyvoting.domain.Session;
+import com.assemblyvoting.exceptions.ExceptionMessages;
+import com.assemblyvoting.exceptions.NotFoundException;
 import com.assemblyvoting.models.converters.SessionConverter;
 import com.assemblyvoting.models.requests.SessionRequest;
 import com.assemblyvoting.repositories.SessionRepository;
@@ -32,7 +34,7 @@ public class SessionService {
 
     Optional<Schedule> schedule = scheduleService.getSchedule(sessionRequest.getScheduleId());
 
-    if (schedule.isEmpty()) throw new RuntimeException("Erro: Pauta não encontrada!");
+    if (schedule.isEmpty()) throw new NotFoundException(ExceptionMessages.SCHEDULE_NOT_FOUND);
 
     sessionRequest.setScheduleId(schedule.get().getId());
 
@@ -44,10 +46,8 @@ public class SessionService {
   public boolean isSessionOpened(Long scheduleId) {
 
     Optional<Session> session = sessionRepository.findSessionByScheduleId(scheduleId);
-    if (session.isEmpty()) throw new RuntimeException("Erro: Sessão de votação não encontrada!");
+    if (session.isEmpty()) throw new NotFoundException(ExceptionMessages.SESSION_NOT_FOUND);
 
-    if (LocalDateTime.now().isAfter(session.get().getEndSession())) return false;
-
-    return true;
+    return !LocalDateTime.now().isAfter(session.get().getEndSession());
   }
 }

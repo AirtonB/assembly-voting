@@ -2,7 +2,9 @@ package com.assemblyvoting.services;
 
 import com.assemblyvoting.domain.Schedule;
 import com.assemblyvoting.domain.Vote;
+import com.assemblyvoting.exceptions.ExceptionMessages;
 import com.assemblyvoting.models.converters.VoteConverter;
+import com.assemblyvoting.models.requests.VoteRequest;
 import com.assemblyvoting.models.responses.CPFResponse;
 import com.assemblyvoting.models.responses.VoteReponse;
 import com.assemblyvoting.repositories.VoteRepository;
@@ -38,6 +40,12 @@ public class VoteService {
 
   public Optional<VoteReponse> findResultByScheduleId(Long id) {
     Optional<Schedule> schedule = scheduleService.getSchedule(id);
+    boolean isSessionOpened = sessionService.isSessionOpened(id);
+
+    if (isSessionOpened) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, ExceptionMessages.OPENED_SESSION);
+    }
+
     VoteReponse voteReponse = new VoteReponse();
 
     if (schedule.isPresent()) {
@@ -52,20 +60,28 @@ public class VoteService {
     return Optional.of(voteReponse);
   }
 
-  public Optional<Vote> saveVote(Vote vote) {
+  public Optional<Vote> saveVote(VoteRequest voteRequest) {
+
+    Vote vote = voteConverter.fromRequestToDomain(voteRequest);
+
     final boolean isSessionOpened = sessionService.isSessionOpened(vote.getSchedule().getId());
     final CPFResponse cpfResponse = cpfValidatorService.checkCpf(vote.getUserIdentification());
 
-    if (isSessionOpened) {
+    if (!isSessionOpened)
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, ExceptionMessages.CLOSSED_SESSION);
 
-      final boolean isUserAbleToVote =
-          voteRepository.existsByUserIdentification(vote.getUserIdentification());
-
-      if (cpfResponse.isValid() && !isUserAbleToVote) {
-        return Optional.of(voteRepository.save(vote));
-      }
+    if (!cpfResponse.isValid()) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, ExceptionMessages.INVALID_CPF);
     }
 
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sessão de votação encerrada!");
+    final boolean isUserNotAbleToVote =
+        voteRepository.existsByUserIdentification(vote.getUserIdentification());
+
+    if (isUserNotAbleToVote) {
+      throw new ResponseStatusException(
+          HttpStatus.FORBIDDEN, ExceptionMessages.HAS_USER_ALREADY_VOTE);
+    }
+
+    return Optional.of(voteRepository.save(vote));
   }
 }

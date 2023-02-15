@@ -1,6 +1,8 @@
 package com.assemblyvoting.services;
 
 import com.assemblyvoting.domain.Schedule;
+import com.assemblyvoting.exceptions.ExceptionMessages;
+import com.assemblyvoting.exceptions.NotFoundException;
 import com.assemblyvoting.models.converters.ScheduleConverter;
 import com.assemblyvoting.models.requests.ScheduleRequest;
 import com.assemblyvoting.repositories.ScheduleRepository;
@@ -22,7 +24,12 @@ public class ScheduleService {
   }
 
   public Optional<Schedule> getSchedule(Long id) {
-    return scheduleRepository.findById(id);
+
+    Optional<Schedule> schedule = scheduleRepository.findById(id);
+
+    if (schedule.isEmpty()) throw new NotFoundException(ExceptionMessages.SCHEDULE_NOT_FOUND);
+
+    return schedule;
   }
 
   public Optional<Schedule> createSchedule(ScheduleRequest scheduleRequest) {

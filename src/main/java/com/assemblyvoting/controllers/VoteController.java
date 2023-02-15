@@ -1,6 +1,7 @@
 package com.assemblyvoting.controllers;
 
 import com.assemblyvoting.domain.Vote;
+import com.assemblyvoting.models.requests.VoteRequest;
 import com.assemblyvoting.models.responses.UserResponseStatus;
 import com.assemblyvoting.models.responses.VoteReponse;
 import com.assemblyvoting.services.VoteService;
@@ -29,11 +30,11 @@ public class VoteController {
   }
 
   @RequestMapping(value = "/vote", method = RequestMethod.POST)
-  public ResponseEntity<UserResponseStatus> saveVote(@RequestBody Vote vote) {
-    Optional<Vote> _vote = voteService.saveVote(vote);
+  public ResponseEntity<UserResponseStatus> saveVote(@RequestBody VoteRequest voteRequest) {
+    Optional<Vote> _vote = voteService.saveVote(voteRequest);
 
     return _vote
-        .map(it -> new ResponseEntity<>(UserResponseStatus.ABLE_TO_VOTE, HttpStatus.CREATED))
+        .map(it -> new ResponseEntity<>(UserResponseStatus.ABLE_TO_VOTE, HttpStatus.OK))
         .orElseGet(
             () ->
                 new ResponseEntity<>(

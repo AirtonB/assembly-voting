@@ -1,6 +1,7 @@
 package com.assemblyvoting.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class Session {
   private Long id;
 
   @OneToOne
+  @NotNull(message = "O identificador da pauta não pode ser nulo!")
   @JoinColumn(name = "schedule_id")
   private Schedule schedule;
 
