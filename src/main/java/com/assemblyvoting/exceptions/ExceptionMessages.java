@@ -8,4 +8,5 @@ public class ExceptionMessages {
       "Sessão em adamento, aguarde o encerramento para conferir o resultado";
   public static String INVALID_CPF = "CPF Inválido! Tente novamente com um CPF Válido";
   public static String HAS_USER_ALREADY_VOTE = "Este usuário já votou";
+  public static String INVALID_DATA_ACCESS = "O campo id não pode ser nulo!";
 }

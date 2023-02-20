@@ -6,6 +6,7 @@ import com.assemblyvoting.exceptions.NotFoundException;
 import com.assemblyvoting.models.converters.ScheduleConverter;
 import com.assemblyvoting.models.requests.ScheduleRequest;
 import com.assemblyvoting.repositories.ScheduleRepository;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,10 +25,15 @@ public class ScheduleService {
   }
 
   public Optional<Schedule> getSchedule(Long id) {
+    Optional<Schedule> schedule;
 
-    Optional<Schedule> schedule = scheduleRepository.findById(id);
-
-    if (schedule.isEmpty()) throw new NotFoundException(ExceptionMessages.SCHEDULE_NOT_FOUND);
+    try {
+      schedule = scheduleRepository.findById(id);
+    } catch (InvalidDataAccessApiUsageException e) {
+      throw new InvalidDataAccessApiUsageException(ExceptionMessages.INVALID_DATA_ACCESS);
+    } catch (NotFoundException e) {
+      throw new NotFoundException(ExceptionMessages.SCHEDULE_NOT_FOUND);
+    }
 
     return schedule;
   }
