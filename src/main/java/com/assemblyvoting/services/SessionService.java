@@ -30,7 +30,7 @@ public class SessionService {
     this.sessionConverter = sessionConverter;
   }
 
-  public Optional<Session> openSession(SessionRequest sessionRequest) {
+  public Optional<Session> openSession(SessionRequest sessionRequest, LocalDateTime startSession) {
 
     Optional<Schedule> schedule = scheduleService.getSchedule(sessionRequest.getScheduleId());
 
@@ -38,7 +38,7 @@ public class SessionService {
 
     sessionRequest.setScheduleId(schedule.get().getId());
 
-    Session session = sessionConverter.fromRequestToDomain(sessionRequest, LocalDateTime.now());
+    Session session = sessionConverter.fromRequestToDomain(sessionRequest, startSession);
 
     return Optional.of(sessionRepository.save(session));
   }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 /**
  * @author leandro-bezerra
@@ -26,7 +27,7 @@ public class SessionController {
 
   @RequestMapping(value = "/session", method = RequestMethod.POST)
   public ResponseEntity<Session> createSession(@RequestBody SessionRequest sessionRequest) {
-    Optional<Session> _session = sessionService.openSession(sessionRequest);
+    Optional<Session> _session = sessionService.openSession(sessionRequest, LocalDateTime.now());
     return _session
         .map(it -> new ResponseEntity<>(it, HttpStatus.CREATED))
         .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));

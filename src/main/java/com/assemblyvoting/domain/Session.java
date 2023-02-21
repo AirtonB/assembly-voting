@@ -26,6 +26,6 @@ public class Session {
   @NotNull(message = "O identificador da pauta não pode ser nulo!")
   private Schedule schedule;
 
-  private LocalDateTime startSession = LocalDateTime.now();
+  private LocalDateTime startSession;
   private LocalDateTime endSession;
 }

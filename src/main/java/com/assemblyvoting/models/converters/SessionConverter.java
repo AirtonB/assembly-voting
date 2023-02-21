@@ -14,9 +14,13 @@ public class SessionConverter {
   private static final long DEFAULT_SESSION_TIME_IN_MINUTES = 1;
 
   public Session fromRequestToDomain(SessionRequest sessionRequest, LocalDateTime startSession) {
-    if (Objects.isNull(sessionRequest.getSessionEndTime()))
-      sessionRequest.setSessionEndTime(startSession.plusMinutes(DEFAULT_SESSION_TIME_IN_MINUTES));
 
-    return modelMapper.map(sessionRequest, Session.class);
+    var session = modelMapper.map(sessionRequest, Session.class);
+    session.setStartSession(startSession);
+
+    if (Objects.isNull(sessionRequest.getSessionEndTime()))
+      session.setEndSession(startSession.plusMinutes(DEFAULT_SESSION_TIME_IN_MINUTES));
+
+    return session;
   }
 }

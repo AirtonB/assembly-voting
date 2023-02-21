@@ -68,7 +68,7 @@ public class VoteService {
     final CPFResponse cpfResponse = cpfValidatorService.checkCpf(vote.getUserIdentification());
 
     if (!isSessionOpened)
-      throw new ResponseStatusException(HttpStatus.FORBIDDEN, ExceptionMessages.CLOSSED_SESSION);
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, ExceptionMessages.CLOSED_SESSION);
 
     if (!cpfResponse.isValid()) {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, ExceptionMessages.INVALID_CPF);

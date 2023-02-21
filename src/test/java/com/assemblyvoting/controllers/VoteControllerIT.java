@@ -42,7 +42,7 @@ class VoteControllerIT {
   @Test
   @SneakyThrows
   @SqlGroup({@Sql(value = "classpath:data.sql")})
-  @DisplayName("Deve realizar um voto {verdadeiro} válido")
+  @DisplayName("Deve realizar um voto SIM válido")
   void shouldCreateAndReturnValidTrueVote() {
     var voteRequest =
         VoteRequest.builder()
@@ -63,7 +63,7 @@ class VoteControllerIT {
   @Test
   @SneakyThrows
   @SqlGroup({@Sql(value = "classpath:data.sql")})
-  @DisplayName("Deve realizar um voto {falso} válido")
+  @DisplayName("Deve realizar um voto NÃO válido")
   void shouldCreateAndReturnValidFalseVote() {
     var voteRequest =
         VoteRequest.builder()
@@ -121,7 +121,7 @@ class VoteControllerIT {
                 .content(objectMapper.writeValueAsString(voteRequest))
                 .contentType(MediaType.APPLICATION_JSON))
         .andDo(print())
-        .andExpect(status().reason(ExceptionMessages.CLOSSED_SESSION))
+        .andExpect(status().reason(ExceptionMessages.CLOSED_SESSION))
         .andExpect(status().isForbidden());
   }
 }
