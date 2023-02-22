@@ -63,7 +63,7 @@ class SessionServiceTest {
 
     final var sessionOptional = Optional.of(sessionMock);
 
-    var sessionRequest =
+    final var sessionRequest =
         SessionRequest.builder().scheduleId(scheduleMock.getId()).sessionEndTime(null).build();
 
     when(scheduleService.getSchedule(scheduleMock.getId())).thenReturn(Optional.of(scheduleMock));
@@ -82,9 +82,9 @@ class SessionServiceTest {
     final var nowPlus30Minutes = now.plusMinutes(30);
 
     sessionMock.setEndSession(nowPlus30Minutes);
-    var sessionOptional = Optional.of(sessionMock);
+    final var sessionOptional = Optional.of(sessionMock);
 
-    var sessionRequest =
+    final var sessionRequest =
         SessionRequest.builder()
             .scheduleId(scheduleMock.getId())
             .sessionEndTime(nowPlus30Minutes)
@@ -103,7 +103,8 @@ class SessionServiceTest {
   @SqlGroup({@Sql(value = "classpath:data.sql")})
   @DisplayName("Deve lançar uma exceção ao tentar abrir uma sessão com uma pauta nula")
   void shouldThrowInvalidDataAccessApiUsageException() {
-    var sessionRequest = SessionRequest.builder().scheduleId(null).sessionEndTime(null).build();
+    final var sessionRequest =
+        SessionRequest.builder().scheduleId(null).sessionEndTime(null).build();
 
     assertThatThrownBy(() -> sessionService.openSession(sessionRequest, null))
         .isInstanceOf(InvalidDataAccessApiUsageException.class)
@@ -116,11 +117,21 @@ class SessionServiceTest {
   void shouldThrowScheduleNotFoundException() {
     scheduleMock.setId(new Random().nextLong());
 
-    var sessionRequest =
+    final var sessionRequest =
         SessionRequest.builder().scheduleId(scheduleMock.getId()).sessionEndTime(null).build();
 
     assertThatThrownBy(() -> sessionService.openSession(sessionRequest, null))
         .isInstanceOf(NotFoundException.class)
         .hasMessage(ExceptionMessages.SCHEDULE_NOT_FOUND);
+  }
+
+  @Test
+  @SqlGroup({@Sql(value = "classpath:data.sql")})
+  @DisplayName("Deve lançar uma exceção quando a sessão não for encontrada")
+  void shouldThrowSessionNotFoundException() {
+    final var randomScheduleId = new Random().nextLong();
+    assertThatThrownBy(() -> sessionService.isSessionOpened(randomScheduleId))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessage(ExceptionMessages.SESSION_NOT_FOUND);
   }
 }

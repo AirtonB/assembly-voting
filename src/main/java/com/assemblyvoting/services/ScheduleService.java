@@ -40,7 +40,7 @@ public class ScheduleService {
 
   public Optional<Schedule> createSchedule(ScheduleRequest scheduleRequest) {
 
-    Schedule schedule = scheduleConverter.fromRequestToDomain(scheduleRequest);
+    var schedule = scheduleConverter.fromRequestToDomain(scheduleRequest);
     return Optional.of(scheduleRepository.save(schedule));
   }
 }

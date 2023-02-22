@@ -1,6 +1,5 @@
 package com.assemblyvoting.services;
 
-import com.assemblyvoting.domain.Schedule;
 import com.assemblyvoting.domain.Session;
 import com.assemblyvoting.exceptions.ExceptionMessages;
 import com.assemblyvoting.exceptions.NotFoundException;
@@ -32,20 +31,20 @@ public class SessionService {
 
   public Optional<Session> openSession(SessionRequest sessionRequest, LocalDateTime startSession) {
 
-    Optional<Schedule> schedule = scheduleService.getSchedule(sessionRequest.getScheduleId());
+    var schedule = scheduleService.getSchedule(sessionRequest.getScheduleId());
 
     if (schedule.isEmpty()) throw new NotFoundException(ExceptionMessages.SCHEDULE_NOT_FOUND);
 
     sessionRequest.setScheduleId(schedule.get().getId());
 
-    Session session = sessionConverter.fromRequestToDomain(sessionRequest, startSession);
+    final var session = sessionConverter.fromRequestToDomain(sessionRequest, startSession);
 
     return Optional.of(sessionRepository.save(session));
   }
 
   public boolean isSessionOpened(Long scheduleId) {
 
-    Optional<Session> session = sessionRepository.findSessionByScheduleId(scheduleId);
+    var session = sessionRepository.findSessionByScheduleId(scheduleId);
     if (session.isEmpty()) throw new NotFoundException(ExceptionMessages.SESSION_NOT_FOUND);
 
     return !LocalDateTime.now().isAfter(session.get().getEndSession());

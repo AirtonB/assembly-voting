@@ -18,7 +18,7 @@ public interface VoteRepository extends CrudRepository<Vote, Long> {
   Long registeredYesVoteBySchedule(Long id);
 
   @Query("SELECT count(v.id) FROM Vote v WHERE v.schedule.id = ?1 AND v.registeredVote is not null")
-  Long totalRegisteredVotes(Long id);
+  Long totalRegisteredVotesByScheduleId(Long id);
 
   Boolean existsByUserIdentification(String userIdentification);
 }

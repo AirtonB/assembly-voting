@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -32,22 +31,21 @@ class ScheduleServiceTest {
   ScheduleRequest scheduleRequestMock;
 
   ScheduleServiceTest() {
-    MockitoAnnotations.openMocks(this);
     scheduleMock = Schedule.builder().id(1L).description("Schedule #1").build();
     scheduleRequestMock = ScheduleRequest.builder().description("Schedule #1").build();
   }
 
   @Test
   @DisplayName("Deve criar e retornar uma pauta de votação")
-  void shouldCreateAndReturnScheduleOptional() {
-    var scheduleOptional = Optional.of(scheduleMock);
+  void shouldCreateAndReturnSchedule() {
+    final var scheduleOptional = Optional.of(scheduleMock);
 
     when(scheduleConverter.fromRequestToDomain(scheduleRequestMock))
         .thenReturn(scheduleOptional.get());
     when(scheduleRepository.save(scheduleOptional.get())).thenReturn(scheduleOptional.get());
 
     var actual = scheduleService.createSchedule(scheduleRequestMock);
-    assertEquals(scheduleOptional, actual);
+    assertEquals(actual, scheduleOptional);
 
     verify(scheduleConverter).fromRequestToDomain(scheduleRequestMock);
     verify(scheduleRepository).save(scheduleOptional.get());
@@ -58,7 +56,7 @@ class ScheduleServiceTest {
   @Test
   @DisplayName("Deve retornar uma pauta quando for encontrada")
   void shouldReturnScheduleFound() {
-    var scheduleOptional = Optional.of(scheduleMock);
+    final var scheduleOptional = Optional.of(scheduleMock);
     when(scheduleRepository.findById(scheduleOptional.get().getId())).thenReturn(scheduleOptional);
 
     var scheduleFound = scheduleService.getSchedule(scheduleOptional.get().getId());
