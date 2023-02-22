@@ -3,6 +3,7 @@ package com.assemblyvoting.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Session {
@@ -20,10 +22,10 @@ public class Session {
   private Long id;
 
   @OneToOne
-  @NotNull(message = "O identificador da pauta não pode ser nulo!")
   @JoinColumn(name = "schedule_id")
+  @NotNull(message = "O identificador da pauta não pode ser nulo!")
   private Schedule schedule;
 
-  private LocalDateTime startSession = LocalDateTime.now();
+  private LocalDateTime startSession;
   private LocalDateTime endSession;
 }

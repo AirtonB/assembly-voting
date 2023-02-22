@@ -46,29 +46,28 @@ public class VoteService {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, ExceptionMessages.OPENED_SESSION);
     }
 
-    VoteReponse voteReponse = new VoteReponse();
-
     if (schedule.isPresent()) {
-      final Long yesVote = voteRepository.registeredYesVoteBySchedule(schedule.get().getId());
-      final Long totalVotes = voteRepository.totalRegisteredVotes(schedule.get().getId());
-      final Long noVote = totalVotes - yesVote;
+      final var yesVote = voteRepository.registeredYesVoteBySchedule(schedule.get().getId());
+      final var totalVotes =
+          voteRepository.totalRegisteredVotesByScheduleId(schedule.get().getId());
+      final var noVote = (totalVotes - yesVote);
       final boolean scheduleAproved = yesVote > noVote;
-      voteReponse =
-          voteConverter.toResponse(schedule.get(), yesVote, noVote, totalVotes, scheduleAproved);
+      return Optional.of(
+          voteConverter.toResponse(schedule.get(), yesVote, noVote, totalVotes, scheduleAproved));
     }
 
-    return Optional.of(voteReponse);
+    return Optional.of(VoteReponse.builder().build());
   }
 
   public Optional<Vote> saveVote(VoteRequest voteRequest) {
 
-    Vote vote = voteConverter.fromRequestToDomain(voteRequest);
+    var vote = voteConverter.fromRequestToDomain(voteRequest);
 
     final boolean isSessionOpened = sessionService.isSessionOpened(vote.getSchedule().getId());
     final CPFResponse cpfResponse = cpfValidatorService.checkCpf(vote.getUserIdentification());
 
     if (!isSessionOpened)
-      throw new ResponseStatusException(HttpStatus.FORBIDDEN, ExceptionMessages.CLOSSED_SESSION);
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, ExceptionMessages.CLOSED_SESSION);
 
     if (!cpfResponse.isValid()) {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, ExceptionMessages.INVALID_CPF);

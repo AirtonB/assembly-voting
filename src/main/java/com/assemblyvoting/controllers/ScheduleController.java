@@ -5,12 +5,10 @@ import com.assemblyvoting.models.requests.ScheduleRequest;
 import com.assemblyvoting.services.ScheduleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 /**
  * @author leandro-bezerra
  */
@@ -24,12 +22,12 @@ public class ScheduleController {
     this.scheduleService = scheduleService;
   }
 
-  @RequestMapping(value = "/schedule", method = RequestMethod.POST)
+  @PostMapping("/schedule")
   public ResponseEntity<Schedule> createSchedule(@RequestBody ScheduleRequest scheduleRequest) {
 
-    Optional<Schedule> _schedule = scheduleService.createSchedule(scheduleRequest);
+    final var schedule = scheduleService.createSchedule(scheduleRequest);
 
-    return _schedule
+    return schedule
         .map(it -> new ResponseEntity<>(it, HttpStatus.CREATED))
         .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
   }
